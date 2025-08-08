@@ -1,7 +1,27 @@
-// app/notes/page.tsx
+// app/notes/[id]/page.tsx
 
-const Notes = () => {
-  return <div>Notes</div>;
+import { getSingleNote } from "@/lib/api";
+
+type Props = {
+  params: Promise<{ id: string }>;
 };
 
-export default Notes;
+const NoteDetails = async ({ params }: Props) => {
+  const { id } = await params;
+  const note = await getSingleNote(id);
+
+  const formattedDate = note.updatedAt
+    ? `Updated at: ${note.updatedAt}`
+    : `Created at: ${note.createdAt}`;
+
+  return (
+    <div>
+      <h2>{note.title}</h2>
+      <p>{note.content}</p>
+      <button>Edit</button>
+      <p>{formattedDate}</p>
+    </div>
+  );
+};
+
+export default NoteDetails;
